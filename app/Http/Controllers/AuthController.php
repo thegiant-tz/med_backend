@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Exception;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -29,5 +30,37 @@ class AuthController extends Controller
             } catch(Exception $e) {
                 return $e;
             }
+    }
+
+    function Login(Request $request)
+    {
+        try {
+            
+            if (!isset($request->authenticateThrough) || $request->authenticateThrough == 'email') {
+                $user = User::with('role')->where('email', $request->email)->first();
+            } else if ($request->authenticateThrough == 'phone') {
+                $user = User::with('role')->where('phone', $request->phone)->first();
+            }
+            
+            if (!is_null($user)) {
+                if (Hash::check($request->password, $user->password)) {
+                    return (object) array(
+                        'message' => 'authorized',
+                        'user' => $user,
+                        'token' => $user->createToken('myApp')->plainTextToken
+                    );
+                } else {
+
+                    $message = 'unauthorized';
+                }
+            } else {
+                $message = 'unauthorized';
+            }
+            return (object) array(
+                'message' => $message
+            );
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 }
