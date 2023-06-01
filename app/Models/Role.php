@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     use HasFactory;
+    public const ROLES_NAME = [
+        'driver' => 'Driver',
+        'recruiter' => 'Recruiter'
+    ];
 
     function users()
     {

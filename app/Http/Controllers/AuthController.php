@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,12 +14,15 @@ class AuthController extends Controller
 
     function register(Request $request) {
             try {
+                
                 $user = User::updateOrCreate([
                     'name' => $request->name,
                     'phone' => $request->phone,
                     'email' => $request->email,
-                    'password' => $request->password
+                    'password' => $request->password,
+                    'role_id' => Role::where('type', $request->role_name)->first()->id
                 ]);
+                $user = User::with('role')->where('id', $user->id)->first();
                 if (isset($user->id)) {
                     return [
                         'message' => 'success',
