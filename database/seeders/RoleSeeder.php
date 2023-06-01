@@ -17,7 +17,7 @@ class RoleSeeder extends Seeder
         $stuffsRoles = Role::ROLES_NAME;
         foreach ($stuffsRoles as $key => $role) {
             Role::create([
-                'name' => $role,
+                'type' => $role,
                 'slug' => $key
             ]);
         }
