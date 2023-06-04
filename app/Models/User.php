@@ -3,10 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Location;
+use App\Models\Recruiter;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -47,5 +49,13 @@ class User extends Authenticatable
 
     public function role() {
         return $this->belongsTo(Role::class, 'role_id', 'id');
+    }
+
+    public function recruiter() {
+        return $this->hasOne(Recruiter::class, 'user_id', 'id');
+    }
+
+    public function locations() {
+        return $this->hasMany(Location::class, 'user_id', 'id');
     }
 }
