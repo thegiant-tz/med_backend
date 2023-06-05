@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('source');
             $table->string('destination');
-            $table->enum('status', ['Pending', 'Busy', 'Completed']);
+            $table->enum('status', ['Pending', 'Busy', 'Cancelled', 'Completed'])->default('Pending');
             $table->date('expires_at');
             $table->foreignId('recruiter_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('driver_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('driver_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

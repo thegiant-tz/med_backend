@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Recruiter;
 use Exception;
 use App\Models\Role;
 use App\Models\User;
@@ -22,8 +23,10 @@ class AuthController extends Controller
                     'password' => $request->password,
                     'role_id' => Role::where('type', $request->role_name)->first()->id
                 ]);
+
                 $user = User::with('role')->where('id', $user->id)->first();
                 if (isset($user->id)) {
+                    $this->createRecruiter($request, $user);
                     return [
                         'message' => 'success',
                         'user' => $user,
@@ -34,6 +37,14 @@ class AuthController extends Controller
             } catch(Exception $e) {
                 return $e;
             }
+    }
+
+    private function createRecruiter(Request $request, User $user) {
+        if ($request->role_name === 'Recruiter') {
+            $user->recruiter()->create([
+                'recruiter_no' => 'REC' . str_pad($user->id, 5, 0, STR_PAD_LEFT)
+            ]);
+        }
     }
 
     function Login(Request $request)

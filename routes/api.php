@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,10 +17,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/getx', function() {
-    return view('welcome');
+Route::get('/getx', function() {
+    return route('recruiter.booking');
 })->name('register');
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return 'Hi you authorized';
-});
+Route::middleware('auth:sanctum')->post('/booking', [BookingController::class, 'book'])->name('booking');
 
