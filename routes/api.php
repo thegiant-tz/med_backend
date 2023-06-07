@@ -15,10 +15,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::get('/getx', function() {
+Route::get('/getx', function () {
     return route('recruiter.booking');
 })->name('register');
 Route::middleware('auth:sanctum')->post('/booking', [BookingController::class, 'book'])->name('booking');
-
+Route::middleware('auth:sanctum')->get('/get-bookings', [BookingController::class, 'getBookings'])->name('booking');
