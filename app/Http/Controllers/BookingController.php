@@ -12,8 +12,9 @@ class BookingController extends Controller
 {
     //
 
-    public function book(Request $request) {
-        
+    public function book(Request $request)
+    {
+
         try {
             $booking = Booking::updateOrCreate([
                 'source' => $request->source,
@@ -22,44 +23,44 @@ class BookingController extends Controller
                 'destinationAddress' => $request->destinationAddress,
                 'recruiter_id' => Auth::user()->recruiter->id,
                 'expires_at' => (new Carbon(now(), 'Africa/Nairobi'))->addDay()->format('Y-m-d'),
-               ]);
-        
-               if (isset($booking->id)) {
+            ]);
+
+            if (isset($booking->id)) {
                 return [
                     'message' => 'Data saved successfull',
                     'booking' => $booking
                 ];
-               } else {
+            } else {
                 return [
                     'message' => 'Process failed'
                 ];
-               }
+            }
         } catch (Exception $th) {
             //throw $th;
             return $th;
         }
     }
 
-    public function getBookings() {
+    public function getBookings()
+    {
         try {
 
             $bookings = Booking::whereRecruiterId(Auth::user()->recruiter->id)->orderBy('id', 'DESC')->get();
-        
-               if ($bookings->count()) {
+
+            if ($bookings->count()) {
                 return [
                     'message' => 'fetched',
                     'bookings' => $bookings
                 ];
-               } else {
+            } else {
                 return [
                     'message' => 'Process failed',
                     'bookings' => Auth::user()->id
                 ];
-               }
+            }
         } catch (Exception $th) {
             //throw $th;
             return $th;
         }
     }
 }
-
