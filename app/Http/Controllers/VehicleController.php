@@ -33,7 +33,7 @@ class VehicleController extends Controller
 
 
     public function getVehicles() {
-        $vehicles = Vehicle::whereRecruiterId(Auth::user()->recruiter->id)->get();
+        $vehicles = Vehicle::whereRecruiterId(Auth::user()->recruiter->id)->orderBy('id', 'DESC')->get();
         if ($vehicles->count()) {
             return [
                 'message' => 'success',
