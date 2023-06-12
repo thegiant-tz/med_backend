@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Vehicle;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,12 +17,14 @@ class BookingController extends Controller
     {
 
         try {
+            $vehicle = Vehicle::wherePlateNo(explode(' | ', $request->vehicle)[0])->first();
             $booking = Booking::updateOrCreate([
                 'source' => $request->source,
                 'destination' => $request->destination,
                 'sourceAddress' => $request->sourceAddress,
                 'destinationAddress' => $request->destinationAddress,
                 'recruiter_id' => Auth::user()->recruiter->id,
+                'vehicle_id' => $vehicle->id,
                 'expires_at' => (new Carbon(now(), 'Africa/Nairobi'))->addDay()->format('Y-m-d'),
             ]);
 
@@ -45,7 +48,7 @@ class BookingController extends Controller
     {
         try {
 
-            $bookings = Booking::whereRecruiterId(Auth::user()->recruiter->id)->orderBy('id', 'DESC')->get();
+            $bookings = Booking::with('vehicle')->whereRecruiterId(Auth::user()->recruiter->id)->orderBy('id', 'DESC')->get();
 
             if ($bookings->count()) {
                 return [
