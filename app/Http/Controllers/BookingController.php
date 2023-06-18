@@ -48,7 +48,7 @@ class BookingController extends Controller
     {
         try {
 
-            $bookings = Booking::with('vehicle')->whereRecruiterId(Auth::user()->recruiter->id)->orderBy('id', 'DESC')->get();
+            $bookings = Booking::with(['vehicle', 'driver'])->whereRecruiterId(Auth::user()->recruiter->id)->orderBy('id', 'DESC')->get();
 
             if ($bookings->count()) {
                 return [
@@ -64,6 +64,51 @@ class BookingController extends Controller
         } catch (Exception $th) {
             //throw $th;
             return $th;
+        }
+    }
+
+    function getPendingBookings(Request $request)
+    {
+        try {
+            if(isset(Auth::user()->driver->id)) {
+                $busyBookings = Booking::with(['vehicle', 'recruiter.user'])->whereDriverId(Auth::user()->driver->id)->whereStatus('Busy')->get();
+            }
+            if (isset(Auth::user()->driver->id) && count($busyBookings) > 0) {
+                $bookings = $busyBookings;
+                $status = 'Busy';
+            } else {
+                $status = 'Pending';
+                $bookings = Booking::with(['vehicle', 'recruiter.user'])->whereStatus($request->status)->orderBy('id', 'DESC')->get();
+            }
+
+            if ($bookings->count()) {
+                return [
+                    'message' => 'fetched',
+                    'status' => $status,
+                    'bookings' => $bookings
+                ];
+            } else {
+                return [
+                    'message' => 'Process failed',
+                    'bookings' => []
+                ];
+            }
+        } catch (Exception $th) {
+            //throw $th;
+            return $th;
+        }
+    }
+
+    function acceptRequest(Request $request)
+    {
+        $update = Booking::where('id', $request->id)->update([
+            'driver_id' => Auth::user()->driver->id,
+            'status' => 'Busy'
+        ]);
+        if ($update) {
+            return ['message' => 'updated'];
+        } else {
+            return ['message' => 'not updated'];
         }
     }
 }

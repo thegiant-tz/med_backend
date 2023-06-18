@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Auth;
 class VehicleController extends Controller
 {
     //
-    function register(Request $request) {
+    function register(Request $request)
+    {
+        
         $vehicle = Vehicle::updateOrCreate([
             'model' => $request->model,
             'manufacturer' => $request->manufacturer,
@@ -24,15 +26,16 @@ class VehicleController extends Controller
                 'message' => 'success',
                 'vehicle' => $vehicle
             ];
-           } else {
+        } else {
             return [
                 'message' => 'failed'
             ];
-           }
+        }
     }
 
 
-    public function getVehicles() {
+    public function getVehicles()
+    {
         $vehicles = Vehicle::whereRecruiterId(Auth::user()->recruiter->id)->orderBy('id', 'DESC')->get();
         if ($vehicles->count()) {
             return [

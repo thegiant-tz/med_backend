@@ -25,5 +25,8 @@ Route::get('/getx', function () {
 })->name('register');
 Route::middleware('auth:sanctum')->post('/booking', [BookingController::class, 'book'])->name('booking');
 Route::middleware('auth:sanctum')->get('/get-bookings', [BookingController::class, 'getBookings'])->name('booking');
+Route::middleware('auth:sanctum')->get('/get-pending-bookings/{status}', [BookingController::class, 'getPendingBookings'])->name('pending.booking');
 Route::middleware('auth:sanctum')->post('/register-vehicle', [VehicleController::class, 'register'])->name('register.vehicle');
+Route::middleware('auth:sanctum')->post('/accept-request', [BookingController::class, 'acceptRequest'])->name('acceptRequest');
 Route::middleware('auth:sanctum')->get('/get-vehicles', [VehicleController::class, 'getVehicles'])->name('get.vehicles');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
