@@ -50,7 +50,7 @@ class AuthController extends Controller
     function Login(Request $request)
     {
         try {
-            
+            // return route('add.reminder');
             if (!isset($request->authenticateThrough) || $request->authenticateThrough == 'email') {
                 $user = User::with('role')->where('email', $request->email)->first();
             } else if ($request->authenticateThrough == 'phone') {
@@ -75,7 +75,14 @@ class AuthController extends Controller
                 'message' => $message
             );
         } catch (Exception $e) {
+            $this->goto();
             return $e->getMessage();
         }
     }
+
+    
+function goto() {
+    
 }
+}
+
