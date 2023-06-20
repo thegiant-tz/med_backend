@@ -55,6 +55,10 @@ class User extends Authenticatable
         return $this->hasOne(Recruiter::class, 'user_id', 'id');
     }
 
+    public function driver() {
+        return $this->hasOne(Driver::class, 'user_id', 'id');
+    }
+
     public function locations() {
         return $this->hasMany(Location::class, 'user_id', 'id');
     }

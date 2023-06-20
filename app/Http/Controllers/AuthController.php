@@ -26,7 +26,7 @@ class AuthController extends Controller
 
                 $user = User::with('role')->where('id', $user->id)->first();
                 if (isset($user->id)) {
-                    $this->createRecruiter($request, $user);
+                    $this->createUserRole($request, $user);
                     return [
                         'message' => 'success',
                         'user' => $user,
@@ -39,10 +39,14 @@ class AuthController extends Controller
             }
     }
 
-    private function createRecruiter(Request $request, User $user) {
+    private function createUserRole(Request $request, User $user) {
         if ($request->role_name === 'Recruiter') {
             $user->recruiter()->create([
                 'recruiter_no' => 'REC' . str_pad($user->id, 5, 0, STR_PAD_LEFT)
+            ]);
+        } else if ($request->role_name === 'Driver') {
+            $user->driver()->create([
+                'driver_no' => 'DRV' . str_pad($user->id, 5, 0, STR_PAD_LEFT)
             ]);
         }
     }
@@ -80,9 +84,13 @@ class AuthController extends Controller
         }
     }
 
-    
-function goto() {
-    
-}
+
+    function Logout(Request $request) {
+        // auth()->user()->tokens()->delete();
+        return response([
+            'message' => 'logged out'
+        ], 200);
+    }
+
 }
 

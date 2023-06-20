@@ -21,7 +21,6 @@ use App\Models\Reminder;
 
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-// Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::post('/add-reminder', function (Request $request) {
     $reminder = Reminder::updateOrCreate(
         [
@@ -50,8 +49,5 @@ Route::get('/get-reminders', function (Request $request) {
         return array('message' => 'failed');
     }
 })->name('get.reminders');
-// });
-// Route::middleware('auth:sanctum')->post('/booking', [BookingController::class, 'book'])->name('booking');
-// Route::middleware('auth:sanctum')->get('/get-bookings', [BookingController::class, 'getBookings'])->name('booking');
-// Route::middleware('auth:sanctum')->post('/register-vehicle', [VehicleController::class, 'register'])->name('register.vehicle');
-// Route::middleware('auth:sanctum')->get('/get-vehicles', [VehicleController::class, 'getVehicles'])->name('get.vehicles');
+
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
