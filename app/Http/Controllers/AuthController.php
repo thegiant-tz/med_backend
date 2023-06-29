@@ -26,7 +26,7 @@ class AuthController extends Controller
 
                 $user = User::with('role')->where('id', $user->id)->first();
                 if (isset($user->id)) {
-                    $this->createUserRole($request, $user);
+                    // $this->createUserRole($request, $user);
                     return [
                         'message' => 'success',
                         'user' => $user,
@@ -39,17 +39,17 @@ class AuthController extends Controller
             }
     }
 
-    private function createUserRole(Request $request, User $user) {
-        if ($request->role_name === 'Recruiter') {
-            $user->recruiter()->create([
-                'recruiter_no' => 'REC' . str_pad($user->id, 5, 0, STR_PAD_LEFT)
-            ]);
-        } else if ($request->role_name === 'Driver') {
-            $user->driver()->create([
-                'driver_no' => 'DRV' . str_pad($user->id, 5, 0, STR_PAD_LEFT)
-            ]);
-        }
-    }
+    // private function createUserRole(Request $request, User $user) {
+    //     if ($request->role_name === '') {
+    //         $user->recruiter()->create([
+    //             'recruiter_no' => 'REC' . str_pad($user->id, 5, 0, STR_PAD_LEFT)
+    //         ]);
+    //     } else if ($request->role_name === 'Driver') {
+    //         $user->driver()->create([
+    //             'driver_no' => 'DRV' . str_pad($user->id, 5, 0, STR_PAD_LEFT)
+    //         ]);
+    //     }
+    // }
 
     function Login(Request $request)
     {

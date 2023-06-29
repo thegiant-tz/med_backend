@@ -9,8 +9,8 @@ class Role extends Model
 {
     use HasFactory;
     public const ROLES_NAME = [
-        'driver' => 'Driver',
-        'recruiter' => 'Recruiter'
+        'doctor' => 'Doctor',
+        'patient' => 'Patient'
     ];
 
     function users()
