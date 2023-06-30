@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('unit');
             $table->double('intake');
             $table->integer('often');
-            $table->dateTime('start_at');
+            $table->time('start_at');
             $table->timestamps();
         });
     }

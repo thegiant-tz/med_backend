@@ -69,7 +69,6 @@ class AuthController extends Controller
                         'token' => $user->createToken('myApp')->plainTextToken
                     );
                 } else {
-
                     $message = 'unauthorized';
                 }
             } else {
@@ -79,7 +78,6 @@ class AuthController extends Controller
                 'message' => $message
             );
         } catch (Exception $e) {
-            $this->goto();
             return $e->getMessage();
         }
     }

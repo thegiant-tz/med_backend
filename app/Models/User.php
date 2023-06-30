@@ -51,15 +51,8 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id', 'id');
     }
 
-    public function recruiter() {
-        return $this->hasOne(Recruiter::class, 'user_id', 'id');
-    }
 
-    public function driver() {
-        return $this->hasOne(Driver::class, 'user_id', 'id');
-    }
-
-    public function locations() {
-        return $this->hasMany(Location::class, 'user_id', 'id');
+    public function reminders() {
+        return $this->hasMany(Reminder::class, 'user_id', 'id');
     }
 }
