@@ -3,6 +3,7 @@
 use App\Models\Vehicle;
 use App\Models\Reminder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -60,6 +61,32 @@ Route::middleware('auth:sanctum')->get('/get-pending-Patients', function (Reques
 
     if (count($reminders) > 0) {
         return array('message' => 'success', 'data' => $reminders);
+    } else {
+        return array('message' => 'failed');
+    }
+})->name('get.reminders');
+
+
+Route::middleware('auth:sanctum')->post('/reminder-confirmation', function (Request $request) {
+    $reminders = Reminder::whereId($request->id)->update([
+        'status' => 'Approved'
+    ]);
+
+    if ($reminders) {
+        return array('message' => 'success');
+    } else {
+        return array('message' => 'failed');
+    }
+})->name('get.reminders');
+
+
+Route::middleware('auth:sanctum')->post('/refill', function (Request $request) {
+    $reminders = Reminder::whereId($request->id)->update([
+        'dosage' => DB::raw('dosage + ' . $request->amount)
+    ]);
+
+    if ($reminders) {
+        return array('message' => 'success');
     } else {
         return array('message' => 'failed');
     }
