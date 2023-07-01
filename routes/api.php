@@ -51,7 +51,7 @@ Route::middleware('auth:sanctum')->get('/get-reminders', function (Request $requ
     } else {
         return array('message' => 'failed');
     }
-})->name('get.reminders');
+});
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -64,12 +64,13 @@ Route::middleware('auth:sanctum')->get('/get-pending-Patients', function (Reques
     } else {
         return array('message' => 'failed');
     }
-})->name('get.reminders');
+});
 
 
 Route::middleware('auth:sanctum')->post('/reminder-confirmation', function (Request $request) {
     $reminders = Reminder::whereId($request->id)->update([
-        'status' => 'Approved'
+        'status' => 'Approved',
+        'approved_by' => Auth::user()->id
     ]);
 
     if ($reminders) {
@@ -77,7 +78,7 @@ Route::middleware('auth:sanctum')->post('/reminder-confirmation', function (Requ
     } else {
         return array('message' => 'failed');
     }
-})->name('get.reminders');
+});
 
 
 Route::middleware('auth:sanctum')->post('/refill', function (Request $request) {
@@ -90,4 +91,18 @@ Route::middleware('auth:sanctum')->post('/refill', function (Request $request) {
     } else {
         return array('message' => 'failed');
     }
-})->name('get.reminders');
+});
+
+
+Route::middleware('auth:sanctum')->post('/confirm-alarm', function (Request $request) {
+    $reminders = Reminder::whereId($request->id)->update([
+        'dosage' => DB::raw('dosage - ' . $request->intake)
+    ]);
+
+    if ($reminders) {
+        return array('message' => 'success');
+    } else {
+        return array('message' => 'failed');
+    }
+});
+
