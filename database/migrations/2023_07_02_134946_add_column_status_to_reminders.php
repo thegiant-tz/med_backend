@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('reminders', function (Blueprint $table) {
             $table->enum('status', ['Pending', 'Approved'])->after('often')->default('Pending');
-            $table->foreignId('approved_by')->nullable()->after('status')->constrained('user')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('approved_by')->nullable()->after('status');
         });
     }
 
