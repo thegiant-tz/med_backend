@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->post('/add-reminder', function (Request $requ
             'intake' => $request->intake,
             'start_at' => $request->start_at,
             'often' => $request->often,
+            'description' => $request->description,
             'user_id' => Auth::user()->id
         ]
     );
@@ -53,7 +54,7 @@ Route::middleware('auth:sanctum')->get('/get-reminders', function (Request $requ
     }
 });
 
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('auth:sanctum')->get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 Route::middleware('auth:sanctum')->get('/get-pending-Patients', function (Request $request) {
@@ -70,6 +71,12 @@ Route::middleware('auth:sanctum')->get('/get-pending-Patients', function (Reques
 Route::middleware('auth:sanctum')->post('/reminder-confirmation', function (Request $request) {
     $reminders = Reminder::whereId($request->id)->update([
         'status' => 'Approved',
+        'med_name' => $request->med_name,
+        'intake' => $request->intake,
+        'dosage' => $request->dosage,
+        'often' => $request->often,
+        'start_at' => $request->start_at,
+        'unit' => $request->unit,
         'approved_by' => Auth::user()->id
     ]);
 
@@ -82,9 +89,21 @@ Route::middleware('auth:sanctum')->post('/reminder-confirmation', function (Requ
 
 
 Route::middleware('auth:sanctum')->post('/refill', function (Request $request) {
-    $reminders = Reminder::whereId($request->id)->update([
-        'dosage' => DB::raw('dosage + ' . $request->amount)
-    ]);
+    $reminders = Reminder::whereId($request->id)->update(
+        isset($request->med_name) ? [
+            'status' => 'Pending',
+            'med_name' => $request->med_name,
+            'intake' => $request->intake,
+            'often' => $request->often,
+            'start_at' => $request->start_at,
+            'unit' => $request->unit,
+            'approved_by' => null,
+            'dosage' => DB::raw('dosage + ' . $request->amount)
+        ] : [
+            'dosage' => DB::raw('dosage + ' . $request->amount),
+            'status' => 'Pending'
+        ]
+    );
 
     if ($reminders) {
         return array('message' => 'success');
