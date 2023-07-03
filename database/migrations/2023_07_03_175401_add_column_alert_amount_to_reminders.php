@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reminders', function (Blueprint $table) {
-            $table->id();
-            $table->string('med_name');
-            $table->double('dosage');
-            $table->string('unit');
-            $table->double('intake');
-            $table->integer('often');
-            $table->timestamps();
+        Schema::table('reminders', function (Blueprint $table) {
+            //
+            $table->double('alert_amount')->after('intake');
         });
     }
 
@@ -27,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_reminders');
+        Schema::table('reminders', function (Blueprint $table) {
+            //
+        });
     }
 };

@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->post('/add-reminder', function (Request $requ
             'dosage' => $request->dosage,
             'unit' => $request->unit,
             'intake' => $request->intake,
-            'start_at' => $request->start_at,
+            'alert_amount' => $request->alert_amount,
             'often' => $request->often,
             'description' => $request->description,
             'user_id' => Auth::user()->id
@@ -51,6 +51,16 @@ Route::middleware('auth:sanctum')->get('/get-reminders', function (Request $requ
         return array('message' => 'success', 'data' => $reminders);
     } else {
         return array('message' => 'failed');
+    }
+});
+
+Route::middleware('auth:sanctum')->post('/get-reminder', function (Request $request) {
+    $reminders = Reminder::find($request->id);
+
+    if (isset($reminders->id)) {
+        return array('message' => 'success', 'data' => $reminders);
+    } else {
+        return array('message' => $request->id);
     }
 });
 
@@ -75,7 +85,7 @@ Route::middleware('auth:sanctum')->post('/reminder-confirmation', function (Requ
         'intake' => $request->intake,
         'dosage' => $request->dosage,
         'often' => $request->often,
-        'start_at' => $request->start_at,
+        'alert_amount' => $request->alert_amount,
         'unit' => $request->unit,
         'approved_by' => Auth::user()->id
     ]);
@@ -95,7 +105,7 @@ Route::middleware('auth:sanctum')->post('/refill', function (Request $request) {
             'med_name' => $request->med_name,
             'intake' => $request->intake,
             'often' => $request->often,
-            'start_at' => $request->start_at,
+            'alert_amount' => $request->alert_amount,
             'unit' => $request->unit,
             'approved_by' => null,
             'dosage' => DB::raw('dosage + ' . $request->amount)
@@ -125,3 +135,12 @@ Route::middleware('auth:sanctum')->post('/confirm-alarm', function (Request $req
     }
 });
 
+Route::middleware('auth:sanctum')->post('/delete', function (Request $request) {
+    $reminders = Reminder::whereId($request->id)->delete();
+
+    if ($reminders) {
+        return array('message' => 'success');
+    } else {
+        return array('message' => 'failed');
+    }
+});
