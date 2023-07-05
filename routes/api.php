@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\Reminder;
 use Illuminate\Http\Request;
@@ -69,6 +70,16 @@ Route::middleware('auth:sanctum')->get('/logout', [AuthController::class, 'logou
 
 Route::middleware('auth:sanctum')->get('/get-pending-Patients', function (Request $request) {
     $reminders = Reminder::with('user')->orderBy('id', 'DESC')->get();
+
+    if (count($reminders) > 0) {
+        return array('message' => 'success', 'data' => $reminders);
+    } else {
+        return array('message' => 'failed');
+    }
+});
+
+Route::middleware('auth:sanctum')->get('/get-patients', function (Request $request) {
+    $reminders = User::where('role_id', 2)->orderBy('name', 'ASC')->get();
 
     if (count($reminders) > 0) {
         return array('message' => 'success', 'data' => $reminders);
