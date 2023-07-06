@@ -34,7 +34,9 @@ Route::middleware('auth:sanctum')->post('/add-reminder', function (Request $requ
             'alert_amount' => $request->alert_amount,
             'often' => $request->often,
             'description' => $request->description,
-            'user_id' => Auth::user()->id
+            'approved_by' => Auth::user()->id,
+            'status' => 'Approved',
+            'user_id' => $request->patient_id
         ]
     );
 
